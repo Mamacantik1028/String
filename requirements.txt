@@ -7,10 +7,3 @@ psutil
 python-dotenv
 telethon
 pytz
-
-# For Web Deployable
-flask
-gunicorn
-Jinja2
-werkzeug
-itsdangerous
