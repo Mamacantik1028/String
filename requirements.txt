@@ -2,8 +2,5 @@ pyrofork==2.3.69
 tgcrypto
 motor
 aiohttp
-dnspython
-psutil
-python-dotenv
 telethon
 pytz
