@@ -1,6 +1,6 @@
 import asyncio
 from telethon import TelegramClient
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from asyncio.exceptions import TimeoutError
 from telethon.sessions import StringSession
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
@@ -50,11 +50,11 @@ buttons_ques = [
         InlineKeyboardButton("𝖳𝖾𝗅𝖾𝗍𝗁𝗈𝗇 𝖡𝗈𝗍", callback_data="telethon_bot"),
         InlineKeyboardButton("𝖯𝗒𝗋𝗈𝗀𝗋𝖺𝗆 𝖡𝗈𝗍", callback_data="pyrogram_bot")
     ], [
-        InlineKeyboardButton("✗ 𝖢𝗅𝗈𝗌𝖾 ✗", callback_data="close")
+        InlineKeyboardButton("✗ 𝖢𝗅𝗈𝗌𝖾 ✗", callback_data="close", style=enums.ButtonStyle.DANGER)
     ]
 ]
 
-gen_button = [[InlineKeyboardButton(text="🔄 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖲𝗍𝗋𝗂𝗇𝗀", callback_data="generate")]]
+gen_button = [[InlineKeyboardButton(text="🔄 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖲𝗍𝗋𝗂𝗇𝗀", callback_data="generate", style=enums.ButtonStyle.PRIMARY)]]
 
 @Client.on_message(filters.private & ~filters.forwarded & filters.command("gen"))
 async def main(_, msg):
