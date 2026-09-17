@@ -61,12 +61,30 @@ gen_button = [[InlineKeyboardButton(text="🔄 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾 
 async def main(_, msg):
     sent = await msg.reply(ask_ques, reply_markup=InlineKeyboardMarkup(buttons_ques))
 
-async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bool = False):
-    if msg.from_user.id in ACTIVE_USERS:
-        r = await msg.reply("⚠️ 𝖲𝖾𝗌𝗌𝗂𝗈𝗇 𝖠𝗅𝗋𝖾𝖺𝖽𝗒 𝖱𝗎𝗇𝗇𝗂𝗇𝗀.\n\n𝖳𝗒𝗉𝖾 /cancel 𝗈𝗋 𝖶𝖺𝗂𝗍.")
-        return await auto_delete(msg, r)
-    ACTIVE_USERS.add(msg.from_user.id)
+async def generate_session(
+    bot: Client,
+    msg: Message,
+    telethon=False,
+    is_bot: bool = False
+):
+    user_id = msg.from_user.id
 
+    if user_id in ACTIVE_USERS:
+        r = await msg.reply(
+            "⚠️ 𝖲𝖾𝗌𝗌𝗂𝗈𝗇 𝖠𝗅𝗋𝖾𝖺𝖽𝗒 𝖱𝗎𝗇𝗇𝗂𝗇𝗀.\n\n"
+            "𝖳𝗒𝗉𝖾 /cancel 𝗈𝗋 𝖶𝖺𝗂𝗍."
+        )
+        return await auto_delete(msg, r)
+
+    ACTIVE_USERS.add(user_id)
+
+    try:
+        # semua kode proses generate_session
+        ...
+        
+    finally:
+        ACTIVE_USERS.discard(user_id)
+        
     if telethon:
         ty = "𝖳𝖾𝗅𝖾𝗍𝗁𝗈𝗇"
     else:
@@ -207,17 +225,34 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         "✅ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒.\n\n📩 𝖢𝗁𝖾𝖼𝗄 𝖲𝖺𝗏𝖾𝖽 𝖬𝖾𝗌𝗌𝖺𝗀𝖾𝗌."
     )
 
-    await auto_delete(msg, done)
-    ACTIVE_USERS.discard(msg.from_user.id)
+    ACTIVE_USERS = set()
+
+
 async def cancelled(msg):
-    ACTIVE_USERS.discard(msg.from_user.id)
-    if "/cancel" in msg.text:
-        r = await msg.reply("❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.", quote=True, reply_markup=InlineKeyboardMarkup(gen_button))
-        await auto_delete(msg, r)
-        return True
-    elif msg.text.startswith("/"):
-        r = await msg.reply("❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.", quote=True)
-        await auto_delete(msg, r)
-        return True
-    else:
+    if not msg or not msg.text:
         return False
+
+    if "/cancel" in msg.text:
+        ACTIVE_USERS.discard(msg.from_user.id)
+
+        r = await msg.reply(
+            "❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.",
+            quote=True,
+            reply_markup=InlineKeyboardMarkup(gen_button)
+        )
+
+        await auto_delete(msg, r)
+        return True
+
+    if msg.text.startswith("/"):
+        ACTIVE_USERS.discard(msg.from_user.id)
+
+        r = await msg.reply(
+            "❌ 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.",
+            quote=True
+        )
+
+        await auto_delete(msg, r)
+        return True
+
+    return False
