@@ -10,7 +10,7 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
 PICS = os.environ.get(
     "PICS",
-    ""
+    "https://ibb.co/HLN6W7Bg"
 ).split()
 
 ADMIN = int(os.environ.get("ADMIN", "0"))
