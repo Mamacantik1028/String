@@ -210,10 +210,10 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         msg.chat.id,
         "✅ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒.\n\n📩 𝖢𝗁𝖾𝖼𝗄 𝖲𝖺𝗏𝖾𝖽 𝖬𝖾𝗌𝗌𝖺𝗀𝖾𝗌."
     )
-await auto_delete(msg, done)
+    await auto_delete(msg, done)
     ACTIVE_USERS.discard(msg.from_user.id)
 
-    async def cancelled(msg):
+async def cancelled(msg):
     ACTIVE_USERS.discard(msg.from_user.id)
     if "/cancel" in msg.text:
         r = await msg.reply("❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.", quote=True, reply_markup=InlineKeyboardMarkup(gen_button))
