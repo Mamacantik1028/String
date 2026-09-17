@@ -175,17 +175,15 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         else:
             await client.sign_in_bot(phone_number)
     if telethon:
-    string_session = client.session.save()
-else:
-    string_session = await client.export_session_string()
-
-text = (
-    f"<blockquote><b>{ty} 𝖲𝗍𝗋𝗂𝗇𝗀 𝖲𝖾𝗌𝗌𝗂𝗈𝗇</b></blockquote>\n\n"
-    f"<code>{string_session}</code>\n\n"
-    "⚠️ 𝖣𝗈 𝗇𝗈𝗍 𝗌𝗁𝖺𝗋𝖾 𝗍𝗁𝗂𝗌 𝗌𝗍𝗋𝗂𝗇𝗀 𝗐𝗂𝗍𝗁 𝖺𝗇𝗒𝗈𝗇𝖾."
-)
-
-try:
+        string_session = client.session.save()
+    else:
+        string_session = await client.export_session_string()
+    text = (
+        f"<blockquote><b>{ty} 𝖲𝗍𝗋𝗂𝗇𝗀 𝖲𝖾𝗌𝗌𝗂𝗈𝗇</b></blockquote>\n\n"
+        f"<code>{string_session}</code>\n\n"
+        "⚠️ 𝖣𝗈 𝗇𝗈𝗍 𝗌𝗁𝖺𝗋𝖾 𝗍𝗁𝗂𝗌 𝗌𝗍𝗋𝗂𝗇𝗀 𝗐𝗂𝗍𝗁 𝖺𝗇𝗒𝗈𝗇𝖾."
+    )
+    try:
     if not is_bot:
         await client.send_message("me", text, parse_mode="html")
     else:
