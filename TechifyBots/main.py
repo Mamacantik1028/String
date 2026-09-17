@@ -1,4 +1,5 @@
 import asyncio
+import kurikit
 from telethon import TelegramClient
 from pyrogram import Client, filters, enums
 from asyncio.exceptions import TimeoutError
@@ -74,7 +75,8 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         ty += " 𝖡𝗈𝗍"
     start_msg = await msg.reply(f"⏳ 𝖲𝗍𝖺𝗋𝗍𝗂𝗇𝗀 {ty} 𝖲𝖾𝗌𝗌𝗂𝗈𝗇 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗈𝗋...")
     user_id = msg.chat.id
-    api_id_msg = await bot.ask(user_id, "𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>API_ID</b>", filters=filters.text)
+    await msg.reply("𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>API_ID</b>")
+    api_id_msg = await bot.listen(user_id, filters=filters.text, timeout=None)
     if await cancelled(api_id_msg):
         return
     else:
@@ -83,7 +85,8 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         except ValueError:
             r = await api_id_msg.reply("❌ API_ID 𝗆𝗎𝗌𝗍 𝖻𝖾 𝖺 𝗇𝗎𝗆𝖻𝖾𝗋.", quote=True, reply_markup=InlineKeyboardMarkup(gen_button))
             return await auto_delete(api_id_msg, r)
-        api_hash_msg = await bot.ask(user_id, "𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>API_HASH</b>", filters=filters.text)
+        await msg.reply("𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>API_HASH</b>")
+        api_hash_msg = await bot.listen(user_id, filters=filters.text, timeout=None)
         if await cancelled(api_hash_msg):
             return
         api_hash = api_hash_msg.text
@@ -91,7 +94,8 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         t = "📱 𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>Phone Number</b> 𝗐𝗂𝗍𝗁 𝖢𝗈𝗎𝗇𝗍𝗋𝗒 𝖢𝗈𝖽𝖾\nExample: <code>+910000000000</code>"
     else:
         t = "🤖 𝖲𝖾𝗇𝖽 𝗒𝗈𝗎𝗋 <b>Bot Token</b>"
-    phone_number_msg = await bot.ask(user_id, t, filters=filters.text)
+    await msg.reply(t)
+    phone_number_msg = await bot.listen(user_id, filters=filters.text, timeout=None)
     if await cancelled(phone_number_msg):
         return
     phone_number = phone_number_msg.text
@@ -125,12 +129,8 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     try:
         phone_code_msg = None
         if not is_bot:
-            phone_code_msg = await bot.ask(
-                user_id,
-                "🔑 𝖲𝖾𝗇𝖽 OTP (Example: 1 2 3 4 5)",
-                filters=filters.text,
-                timeout=600
-            )
+            await msg.reply("🔑 𝖲𝖾𝗇𝖽 OTP (Example: 1 2 3 4 5)")
+            phone_code_msg = await bot.listen(user_id, filters=filters.text, timeout=600)
             if await cancelled(phone_code_msg):
                 return
     except TimeoutError:
@@ -153,15 +153,13 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
             return await auto_delete(msg, r)
         except (SessionPasswordNeeded, SessionPasswordNeededError):
             try:
-                two_step_msg = await bot.ask(
-                    user_id,
-                    "🔒 𝖤𝗇𝗍𝖾𝗋 𝖳𝗐𝗈-𝖲𝗍𝖾𝗉 𝖵𝖾𝗋𝗂𝖿𝗂𝖼𝖺𝗍𝗂𝗈𝗇 𝖯𝖺𝗌𝗌𝗐𝗈𝗋𝖽",
-                    filters=filters.text,
-                    timeout=300
-                )
+                await msg.reply("🔒 𝖤𝗇𝗍𝖾𝗋 𝖳𝗐𝗈-𝖲𝗍𝖾𝗉 𝖵𝖾𝗋𝗂𝖿𝗂𝖼𝖺𝗍𝗂𝗈𝗇 𝖯𝖺𝗌𝗌𝗐𝗈𝗋𝖽")
+                two_step_msg = await bot.listen(user_id, filters=filters.text, timeout=300)
             except TimeoutError:
                 r = await msg.reply("⏰ 𝖳𝗂𝗆𝖾 𝖫𝗂𝗆𝗂𝗍 𝖤𝗑𝗉𝗂𝗋𝖾𝖽.", reply_markup=InlineKeyboardMarkup(gen_button))
                 return await auto_delete(msg, r)
+            if await cancelled(two_step_msg):
+                return
             try:
                 password = two_step_msg.text
                 if telethon:
