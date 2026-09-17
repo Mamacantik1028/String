@@ -53,22 +53,43 @@ async def callback_query_handler(client, query: CallbackQuery):
             await query.message.delete()
             await query.answer()
 
-        elif data == "generate":
-            await query.answer()
-            await query.message.reply(ask_ques, reply_markup=InlineKeyboardMarkup(buttons_ques))
-
         elif data in ["pyrogram", "pyrogram_bot", "telethon", "telethon_bot"]:
-            await query.answer()
-            if data == "pyrogram":
-                await generate_session(client, query.message)
-            elif data == "pyrogram_bot":
-                await query.answer("» ᴛʜᴇ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴡɪʟʟ ʙᴇ ᴏғ ᴩʏʀᴏɢʀᴀᴍ ᴠ2.", show_alert=True)
-                await generate_session(client, query.message, is_bot=True)
-            elif data == "telethon":
-                await generate_session(client, query.message, telethon=True)
-            elif data == "telethon_bot":
-                await generate_session(client, query.message, telethon=True, is_bot=True)
+    await query.answer()
 
-    except Exception as e:
-        print(traceback.format_exc())
-        await query.message.reply(f"**Error -** `{e}`")
+    user_id = query.from_user.id
+
+    if data == "pyrogram":
+        await generate_session(
+            client,
+            query.message,
+            user_id=user_id
+        )
+
+    elif data == "pyrogram_bot":
+        await query.answer(
+            "» ᴛʜᴇ sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴇᴅ ᴡɪʟʟ ʙᴇ ᴏғ ᴩʏʀᴏɢʀᴀᴍ ᴠ2.",
+            show_alert=True
+        )
+        await generate_session(
+            client,
+            query.message,
+            user_id=user_id,
+            is_bot=True
+        )
+
+    elif data == "telethon":
+        await generate_session(
+            client,
+            query.message,
+            user_id=user_id,
+            telethon=True
+        )
+
+    elif data == "telethon_bot":
+        await generate_session(
+            client,
+            query.message,
+            user_id=user_id,
+            telethon=True,
+            is_bot=True
+        )
