@@ -65,7 +65,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     if msg.from_user.id in ACTIVE_USERS:
         r = await msg.reply("⚠️ 𝖲𝖾𝗌𝗌𝗂𝗈𝗇 𝖠𝗅𝗋𝖾𝖺𝖽𝗒 𝖱𝗎𝗇𝗇𝗂𝗇𝗀.\n\n𝖳𝗒𝗉𝖾 /cancel 𝗈𝗋 𝖶𝖺𝗂𝗍.")
         return await auto_delete(msg, r)
-    ACTIVE_USERS.add(msg.from_user.id)
+    ACTIVE_USERS.add(user_id)
 
     if telethon:
         ty = "𝖳𝖾𝗅𝖾𝗍𝗁𝗈𝗇"
@@ -210,17 +210,28 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     )
 
     await auto_delete(msg, done)
-    ACTIVE_USERS.discard(msg.from_user.id)
+ACTIVE_USERS.discard(user_id)
 
 async def cancelled(msg):
-    ACTIVE_USERS.discard(msg.from_user.id)
     if "/cancel" in msg.text:
-        r = await msg.reply("❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.", quote=True, reply_markup=InlineKeyboardMarkup(gen_button))
+        ACTIVE_USERS.discard(msg.chat.id)
+
+        r = await msg.reply(
+            "❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝖾𝖽.",
+            quote=True,
+            reply_markup=InlineKeyboardMarkup(gen_button)
+        )
         await auto_delete(msg, r)
         return True
+
     elif msg.text.startswith("/"):
-        r = await msg.reply("❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝗅𝖾𝖽.", quote=True)
+        ACTIVE_USERS.discard(msg.chat.id)
+
+        r = await msg.reply(
+            "❌ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝗂𝗈𝗇 𝖢𝖺𝗇𝖼𝖾𝗅𝖾𝖽.",
+            quote=True
+        )
         await auto_delete(msg, r)
         return True
-    else:
-        return False
+
+    return False
