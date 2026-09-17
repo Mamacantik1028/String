@@ -1,4 +1,5 @@
 kurigram
+python-dotenv
 tgcrypto
 motor
 aiohttp
