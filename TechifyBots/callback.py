@@ -30,8 +30,8 @@ async def callback_query_handler(client, query: CallbackQuery):
                     caption=text.HELP.format(query.from_user.mention)
                 ),
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton('📢 𝖴𝗉𝖽𝖺𝗍𝖾𝗌',url='https://telegram.me/Techifybots'),
-                     InlineKeyboardButton('🛟 𝖲𝗎𝗉𝗉𝗈𝗋𝗍',url='https://telegram.me/TechifySupport')],
+                    [InlineKeyboardButton('📢 𝖴𝗉𝖽𝖺𝗍𝖾𝗌',url='https://t.me/caallmewhtevr'),
+                     InlineKeyboardButton('🛟 𝖲𝗎𝗉𝗉𝗈𝗋𝗍',url='https://t.me/caallmewhtevr')],
                     [InlineKeyboardButton("↩️ 𝖡𝖺𝖼𝗄",callback_data="start", style=enums.ButtonStyle.PRIMARY)]
                 ])
             )
@@ -43,7 +43,7 @@ async def callback_query_handler(client, query: CallbackQuery):
                     caption=text.ABOUT
                 ),
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton('💻 𝖱𝖾𝗉𝗈',url='https://github.com/TechifyBots/String-Session-Bot'),
+                    [InlineKeyboardButton('💻 𝖱𝖾𝗉𝗈',url='https://t.me/caallmewhtevr'),
                      InlineKeyboardButton('👨‍💻 𝖮𝗐𝗇𝖾𝗋',user_id=int(ADMIN))],
                     [InlineKeyboardButton("↩️ 𝖡𝖺𝖼𝗄",callback_data="start", style=enums.ButtonStyle.PRIMARY)]
                 ])
