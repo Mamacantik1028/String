@@ -22,7 +22,7 @@ from telethon.errors import (
     PasswordHashInvalidError
 )
 
-async def auto_delete(user_msg=None, bot_msg=None, delay=300):
+async def auto_delete(user_msg=None, bot_msg=None, delay=10):
     await asyncio.sleep(delay)
     if user_msg:
         try:
