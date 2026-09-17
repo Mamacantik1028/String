@@ -175,10 +175,11 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         else:
             await client.sign_in_bot(phone_number)
     if telethon:
-        string_session = client.session.save()
-    else:
-        string_session = await client.export_session_string()
-    text = (
+    string_session = client.session.save()
+else:
+    string_session = await client.export_session_string()
+
+text = (
     f"<blockquote><b>{ty} 𝖲𝗍𝗋𝗂𝗇𝗀 𝖲𝖾𝗌𝗌𝗂𝗈𝗇</b></blockquote>\n\n"
     f"<code>{string_session}</code>\n\n"
     "⚠️ 𝖣𝗈 𝗇𝗈𝗍 𝗌𝗁𝖺𝗋𝖾 𝗍𝗁𝗂𝗌 𝗌𝗍𝗋𝗂𝗇𝗀 𝗐𝗂𝗍𝗁 𝖺𝗇𝗒𝗈𝗇𝖾."
@@ -186,26 +187,20 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
 
 try:
     if not is_bot:
-        await client.send_message(
-            "me",
-            text,
-            parse_mode="html"
-        )
+        await client.send_message("me", text, parse_mode="html")
     else:
         await bot.send_message(
             msg.chat.id,
             text,
-            parse_mode="html"
+            parse_mode=enums.ParseMode.HTML
         )
 except KeyError:
     pass
-
-await client.disconnect()
-
-done = await bot.send_message(
-    msg.chat.id,
-    "✅ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒.\n\n📩 𝖢𝗁𝖾𝖼𝗄 𝖲𝖺𝗏𝖾𝖽 𝖬𝖾𝗌𝗌𝖺𝗀𝖾𝗌."
-)
+    await client.disconnect()
+    done = await bot.send_message(
+        msg.chat.id,
+        "✅ 𝖲𝗍𝗋𝗂𝗇𝗀 𝖦𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒.\n\n📩 𝖢𝗁𝖾𝖼𝗄 𝖲𝖺𝗏𝖾𝖽 𝖬𝖾𝗌𝗌𝖺𝗀𝖾𝗌."
+    )
     await auto_delete(msg, done)
     ACTIVE_USERS.discard(msg.from_user.id)
 
